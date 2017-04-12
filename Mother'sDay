@@ -1,0 +1,9 @@
+SELECT  o.currency, o.postdate, o.sku, p.description, p.cdnweight, p.category, o.price, SUM( quantity ) AS units, SUM( quantity * o.price ) AS sales
+FROM orderline o, products p
+WHERE o.sku = p.sku
+AND postdate BETWEEN "--" AND "--" 
+AND o.sku
+IN (07185, 07186, 07187, 07189, 07190, 07110, 07191, 07192, 07193, 07195, 07209, 07188, 07132, 6618, 23598, 
+23600, 23601, 23599, 07224, 07229, 07226, 07227, 07228, 07225)
+GROUP BY o.currency, o.postdate
+Order by o.postdate, o.currency 
