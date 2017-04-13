@@ -1,0 +1,8 @@
+**//Add up the results//**
+select subdate, count(id) from catalog.usa where deleted = 'N' and subdate between '2015-08-01' and '2015-08-31' 
+and source in ('Web','LL SignUp', 'MyAccount','LISTRAK','GOLDEN')
+group by subdate
+
+select subdate, count(id) from catalog.canada where deleted = 'N' and subdate between '2015-08-01' and '2015-08-31' 
+and source in ('Web','LL SignUp', 'MyAccount','LISTRAK','GOLDEN')
+group by subdate
