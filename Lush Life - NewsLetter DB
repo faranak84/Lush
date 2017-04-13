@@ -1,0 +1,10 @@
+**//store subscriptions double entered into database//**
+
+select date_format(date_added,'%Y%m%d'), count(distinct email) from newsletter.subscribers where deleted = 'N' and activated = '1' and date_added between '2015-01-01' and '2015-01-31' 
+and source in ('Web','LL SignUp', 'MyAccount','LISTRAK','Golden','TBTT','GPOT')
+and email not in (
+select email from newsletter.subscribers where source like 'LUSHLIFE'
+and date_added between '2015-01-01' and '2015-01-31')
+and email not like ''
+group by date_format(date_added,'%Y%m%d')
+
