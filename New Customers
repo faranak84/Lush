@@ -1,0 +1,7 @@
+**//(in the lushdb database)   join to boxes to ensure matches with sales data//**
+
+**//Daily//**
+SELECT count(distinct email) from transactions where postdate = '2013-11-01' and email not in (select email from transactions where postdate < '2013-11-01')
+
+**//Monthly new customers://**
+SELECT count(distinct email) from transactions where postdate between '2015-03-01' and '2015-03-31'and email not in (select email from transactions where postdate < '2015-03-01')
