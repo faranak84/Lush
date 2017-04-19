@@ -3,15 +3,19 @@ b.postdate,
 b.subtotal, 
 b.shipping, 
 b.currency, 
-o.sku,
 t.email,
-t.total_cost
+t.total_cost, 
+Case 
+  When o.sku IN (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223) then 'Easter' 
+  When o.sku not in (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223) then 'Non_Easter'
+  Else 'Combine'
+End as Order_Type
 from lushdb.boxes as b 
 inner join orderline as o on 
 b.order_number = o.order_number
 inner join transactions as t 
-where o.sku IN (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223)
-and b.postdate between '2017-03-02' and '2017-04-16'
-and o.sku is not like 'IVEX%'
+where b.postdate between '2017-03-02' and '2017-04-16'
+and o.sku not like 'IVEX%'
 and t.address1 not like '%test order%'
+group by b.order_number
 limit 2
