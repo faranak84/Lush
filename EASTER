@@ -14,6 +14,7 @@ from lushdb.boxes as b
 inner join orderline as o on 
 b.order_number = o.order_number
 inner join transactions as t 
+on t.order_number = o.order_number
 where b.postdate between '2017-03-02' and '2017-04-16'
 and o.sku not like 'IVEX%'
 and t.address1 not like '%test order%'
