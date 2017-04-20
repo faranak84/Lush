@@ -18,8 +18,8 @@ b.currency,
 b.currency, 
 t.email,
 o.sku,
-subtotal, 
-shipping, 
+t.subtotal, 
+t.shipping, 
 t.total_cost,
 Case 
   When o.sku IN (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223) then 0
