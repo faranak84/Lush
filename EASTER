@@ -1,15 +1,15 @@
 Select
-a.order_number, 
-a.postdate,
-a.currency, 
-a.email,
-sum(a.subtotal) subtotal, 
-sum(a.shipping) shipping, 
-sum(a.total_cost),
+order_number, 
+postdate,
+currency, 
+email,
+sum(subtotal) subtotal, 
+sum(shipping) shipping, 
+sum(total_cost),
 Case 
-  When count(a.sku) = sum(a.type_id) then 'Non_Easter'
-  When sum(a.type_id) = 0 then 'Easter' 
-  When sum(a.type_id) > 0 and sum(a.type_id)< count(a.sku) then 'Combine'
+  When count(sku) = sum(type_id) then 'Non_Easter'
+  When sum(type_id) = 0 then 'Easter' 
+  When sum(type_id) > 0 and sum(type_id)< count(sku) then 'Combine'
 End as Order_Type
 From (
 select b.order_number, 
@@ -33,7 +33,7 @@ on t.order_number = o.order_number
 where b.postdate between '2017-03-02' and '2017-04-16'
 and o.sku not like 'IVEX%'
 and t.address1 not like '%test order%') as A
-Group by a.order_number, 
-a.postdate,
-a.currency, 
-a.email
+Group by order_number, 
+postdate,
+currency, 
+email
