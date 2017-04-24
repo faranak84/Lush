@@ -1,0 +1,39 @@
+Select
+currency, 
+email,
+Case 
+  When count(distinct order_number) > 1 then 'Return after receiving flyer'
+  When count(distinct order_number) = 1 then 'One time order'
+End as Customer_Type,
+sum(subtotal) subtotal, 
+sum(shipping) shipping, 
+sum(total_cost),
+Case 
+  When count(sku) = sum(type_id) then 'Non_Easter'
+  When sum(type_id) = 0 then 'Easter' 
+  When sum(type_id) > 0 and sum(type_id)< count(sku) then 'Combine'
+End as Order_Type
+From (
+select b.order_number, 
+b.postdate,
+b.currency, 
+t.email,
+o.sku,
+t.subtotal, 
+t.shipping, 
+t.total_cost,
+Case 
+  When o.sku IN (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223) then 0
+  Else 1
+End as Type_ID
+from lushdb.boxes as b 
+inner join orderline as o on 
+b.order_number = o.order_number
+inner join transactions as t 
+on t.order_number = o.order_number
+where b.postdate between '2017-03-02' and '2017-04-16'
+and o.sku not like 'IVEX%'
+and t.address1 not like '%test order%'
+) as A
+Group by email
+having Customer_Type like 'Return after receiving flyer'
