@@ -15,7 +15,6 @@ From (
 select b.order_number, 
 b.postdate,
 b.currency, 
-b.currency, 
 t.email,
 o.sku,
 t.subtotal, 
