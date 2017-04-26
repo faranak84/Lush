@@ -1,13 +1,11 @@
 Select c.currency, c.order_type,
 count(distinct c.order_number), 
-count(c.email), 
 sum(c.subtotal)
 from
 (
 Select
 a.order_number, 
 a.currency, 
-a.email,
 sum(a.subtotal) subtotal,
 Case 
   When count(a.sku) = sum(a.type_id) then 'Non_Easter'
@@ -18,9 +16,8 @@ From (
 select b.order_number, 
 b.postdate,
 b.currency, 
-t.email,
 o.sku,
-t.subtotal, 
+o.price*o.quantity as subtotal, 
 Case 
   When o.sku IN (06612, 05082, 06619, 05845, 06625, 05846, 201521, 06678, 06681, 06682, 06683) then 0
   Else 1
@@ -28,13 +25,9 @@ End as Type_ID
 from lushdb.boxes as b 
 inner join orderline as o on 
 b.order_number = o.order_number
-inner join transactions as t 
-on o.order_number = t.order_number
 where b.postdate between '2016-02-29' and '2016-03-28'
-and o.sku not like 'IVEX%'
-and t.address1 not like '%test order%') as A
+) as a
 Group by order_number, 
-currency, 
-email)
-as c
-Group by a.currency, a.order_type
+currency
+) as c
+Group by c.currency, c.order_type
