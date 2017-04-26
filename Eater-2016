@@ -1,11 +1,15 @@
+Select a.currency, a.order_type,
+count(distinct a.order_number), 
+count(a.email), 
+sum(a.subtotal)
+from
+(
 Select
 order_number, 
 postdate,
 currency, 
 email,
-sum(subtotal) subtotal, 
-sum(shipping) shipping, 
-sum(total_cost),
+sum(subtotal) subtotal,
 Case 
   When count(sku) = sum(type_id) then 'Non_Easter'
   When sum(type_id) = 0 then 'Easter' 
@@ -35,4 +39,6 @@ and t.address1 not like '%test order%') as A
 Group by order_number, 
 postdate,
 currency, 
-email
+email)
+as a 
+Group by a.currency, a.order_type
