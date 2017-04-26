@@ -1,0 +1,25 @@
+Select c.currency, c.order_type,
+count(distinct c.order_number), 
+sum(c.subtotal)
+from
+  (Select
+  a.order_number, 
+  a.currency, 
+  sum(a.subtotal) subtotal,
+  Case 
+   When count(a.sku) = sum(a.type_id) then 'Non_Easter'
+    When sum(a.type_id) = 0 then 'Easter' 
+    When sum(a.type_id) > 0 and sum(a.type_id)< count(a.sku) then 'Combine'
+  End as Order_Type
+  from
+  (
+  SELECT  o.order_number, o.currency, o.postdate, o.sku,
+  SUM( o.quantity * o.price ) AS subtotal,
+  Case 
+   When o.sku IN (06612, 05082, 06619, 05845, 06625, 05846, 201521, 06678, 06681, 06682, 06683) then 0
+   Else 1
+  End as Type_ID
+  FROM orderline o
+  WHERE  postdate BETWEEN '2016-02-22' AND '2016-03-31' 
+  GROUP BY o.currency, o.postdate, o.sku ) as a
+
