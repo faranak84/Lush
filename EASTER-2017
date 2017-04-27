@@ -1,36 +1,25 @@
-Select c.currency, c.order_type,
-count(distinct c.order_number), 
-count(a.email), 
-sum(a.subtotal)
-from (
-Select
-order_number, 
-postdate,
-currency, 
-email,
-sum(subtotal) subtotal, 
-sum(shipping) shipping, 
-sum(total_cost),
-Case 
-  When count(sku) = sum(type_id) then 'Non_Easter'
-  When sum(type_id) = 0 then 'Easter' 
-  When sum(type_id) > 0 and sum(type_id)< count(sku) then 'Combine'
-End as Order_Type
-From (
-select b.order_number, 
-b.postdate,
-b.currency, 
-o.sku,
-b.subtotal, 
-Case 
-  When o.sku IN (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223) then 0
-  Else 1
-End as Type_ID
-from lushdb.boxes as b 
-inner join orderline as o on 
-b.order_number = o.order_number
-where b.postdate between '2017-03-02' and '2017-04-16'
-) as A
-Group by order_number, 
-postdate,
-currency
+Select b.currency, b.order_type, count(distinct b.order_number) as order_number, sum(b.subtotal1) as subtotal
+From
+    (Select a.order_number, a.currency, sum(a.subtotal) as subtotal1, 
+     Case 
+     When count(a.sku) = sum(a.type_id) then 'Non_Easter'
+     When sum(a.type_id) = 0 then 'Easter' 
+     Else 'combine'
+     End as Order_Type
+     From 
+    (
+        SELECT  o.currency, o.order_number, o.postdate, o.sku,
+        Case 
+        When o.sku IN (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223) then 0
+         Else 1
+        End as Type_ID,
+      SUM( o.quantity * o.price ) AS subtotal
+      FROM orderline o
+      where
+      postdate BETWEEN '2017-04-17' AND '2017-04-23'
+      and o.order_number is not null
+      and o.currency is not null
+      and o.sku is not null
+      Group by o.currency, o.order_number, o.postdate, o.sku) as a
+      Group by a.order_number, a.currency) As b
+Group by  b.currency, b.order_type
