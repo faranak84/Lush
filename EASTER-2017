@@ -1,3 +1,8 @@
+Select c.currency, c.order_type,
+count(distinct c.order_number), 
+count(a.email), 
+sum(a.subtotal)
+from (
 Select
 order_number, 
 postdate,
@@ -15,11 +20,8 @@ From (
 select b.order_number, 
 b.postdate,
 b.currency, 
-t.email,
 o.sku,
-t.subtotal, 
-t.shipping, 
-t.total_cost,
+b.subtotal, 
 Case 
   When o.sku IN (07133,07210,07211,07200,06619,05082,07202,07203,07204,07201,07206,07222,07221,07223) then 0
   Else 1
@@ -27,12 +29,8 @@ End as Type_ID
 from lushdb.boxes as b 
 inner join orderline as o on 
 b.order_number = o.order_number
-inner join transactions as t 
-on t.order_number = o.order_number
 where b.postdate between '2017-03-02' and '2017-04-16'
-and o.sku not like 'IVEX%'
-and t.address1 not like '%test order%') as A
+) as A
 Group by order_number, 
 postdate,
-currency, 
-email
+currency
