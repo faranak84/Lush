@@ -1,0 +1,8 @@
+SELECT SUBSTRING( order_date, 10, 2 ) , COUNT( DISTINCT (
+payments.order_number
+) ) , SUM( amount ) 
+FROM payments
+LEFT JOIN transactions
+USING ( order_number ) 
+WHERE payments.postdate =  '20170417'
+GROUP BY SUBSTRING( order_date, 10, 2 )
