@@ -1,10 +1,11 @@
-       select 
-       p.description,
-       count(distinct order_number) as orders,
-       sum(o.quantity * o.price) as subtotal
-       From orderline as o
-       inner join products as p 
-       on o.sku = p.sku
+select 
+p.description,
+count(distinct order_number) as orders,
+sum(o.quantity) as Quantity,
+sum(o.quantity * o.price) as subtotal
+From orderline as o
+inner join products as p 
+on o.sku = p.sku
        Where o.order_number in 
                      (Select b.order_number
                      from 
