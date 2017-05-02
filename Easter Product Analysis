@@ -8,7 +8,7 @@ inner join products as p
 on o.sku = p.sku
        Where o.order_number in 
                      (Select b.order_number
-                     from 
+                      From 
                            (SELECT a.order_number, a.currency, SUM( a.subtotal ) AS subtotal1, 
                             CASE 
                             WHEN COUNT( a.sku ) = SUM( a.type_id ) 
