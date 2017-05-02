@@ -1,0 +1,33 @@
+select o.order_number, 
+       o.sku, 
+       o.quantity, 
+       o.price 
+From orderline as o 
+Where order_number in 
+(SELECT a.order_number, a.currency, SUM( a.subtotal ) AS subtotal1, 
+CASE 
+WHEN COUNT( a.sku ) = SUM( a.type_id ) 
+THEN  'Non_Easter'
+WHEN SUM( a.type_id ) =0
+THEN  'Easter'
+ELSE  'combine'
+END AS Order_Type
+FROM (
+  SELECT o.currency, o.order_number, o.postdate, o.sku, 
+  CASE 
+  WHEN o.sku
+  IN ( 07133, 07210, 07211, 07200, 06619, 05082, 07202, 07203, 07204, 07201, 07206, 07222, 07221, 07223 ) 
+  THEN 0 
+  ELSE 1 
+  END AS Type_ID, SUM( o.quantity * o.price ) AS subtotal
+  FROM orderline o
+  WHERE postdate
+  BETWEEN  '2017-04-17'
+  AND  '2017-04-23'
+  AND o.order_number IS NOT NULL 
+  AND o.currency IS NOT NULL 
+  AND o.sku IS NOT NULL 
+  GROUP BY o.currency, o.order_number, o.postdate, o.sku
+  ) AS a
+ GROUP BY a.order_number, a.currency ) 
+ order by o.sku
