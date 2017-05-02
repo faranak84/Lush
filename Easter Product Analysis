@@ -1,8 +1,7 @@
-       select o.order_number, 
-       o.sku, 
+       select 
        p.description,
-       o.quantity, 
-       o.price 
+       count(distinct order_number) as orders,
+       sum(o.quantity * o.price) as subtotal
        From orderline as o
        inner join products as p 
        on o.sku = p.sku
@@ -36,4 +35,4 @@
                                       ) AS a
                              GROUP BY a.order_number, a.currency ) as b
                              where order_type = 'combine')
- order by o.sku
+group by p.description 
