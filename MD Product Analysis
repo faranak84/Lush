@@ -1,0 +1,40 @@
+select 
+p.description,
+count(distinct order_number) as orders,
+sum(o.quantity) as Quantity,
+sum(o.quantity * o.price) as subtotal
+From orderline as o
+inner join products as p 
+on o.sku = p.sku
+       Where o.order_number in 
+                     (Select b.order_number
+                      From 
+                           (SELECT a.order_number, a.currency, SUM( a.subtotal ) AS subtotal1, 
+                            CASE 
+                            WHEN COUNT( a.sku ) = SUM( a.type_id ) 
+                            THEN  'Non_MD'
+                            WHEN SUM( a.type_id ) =0
+                            THEN  'MD'
+                            ELSE  'combine'
+                            END AS Order_Type
+                            FROM (
+                                   SELECT o.currency, o.order_number, o.postdate, o.sku, 
+                                   CASE 
+                                   WHEN o.sku
+                                    IN ( 07185, 07186, 07187, 07189, 07190, 07110, 07191, 07192, 07193, 07195, 07209, 07188, 07132, 6618, 23598, 
+23600, 23601, 23599, 07224, 07229, 07226, 07227, 07228, 07225 ) 
+                                    THEN 0 
+                                    ELSE 1 
+                                    END AS Type_ID, SUM( o.quantity * o.price ) AS subtotal
+                                    FROM orderline o
+                                    WHERE postdate
+                                    BETWEEN  '2017-04-03'
+                                    AND  '2017-05-14'
+                                   AND o.order_number IS NOT NULL 
+                                    AND o.currency IS NOT NULL 
+                                      AND o.sku IS NOT NULL 
+                                     GROUP BY o.currency, o.order_number, o.postdate, o.sku
+                                      ) AS a
+                             GROUP BY a.order_number, a.currency ) as b
+                             where order_type = 'combine')
+group by p.description 
