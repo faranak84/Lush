@@ -1,16 +1,16 @@
 SELECT b.postdate, b.currency, count( DISTINCT b.order_number ) AS orders, sum(b.subtotal) as sales, SUM( b.subtotal + b.shipping ) AS SalesWShip, SUM( b.subtotal + b.shipping ) / count( DISTINCT b.order_number ) AS AOV
 FROM lushdb.boxes b
 WHERE b.postdate
-BETWEEN "2017-04-03"
-AND "2017-05-14"
+BETWEEN "2017-06-05"
+AND "2017-06-11"
 AND b.order_number NOT 
 IN (
 SELECT o.order_number
 FROM orderline o
 WHERE o.sku LIKE 'IVEX%'
 AND postdate
-BETWEEN "2017-04-03"
-AND "2017-05-14")
+BETWEEN "2017-06-05"
+AND "2017-06-11")
 And b.order_number not in (
 Select order_number from transactions 
 Where address1 like '%TEST ORDER%')
