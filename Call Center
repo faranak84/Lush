@@ -1,0 +1,3 @@
+SELECT order_number, salesentity
+	FROM MySql.dbo.Transactions WITH(NOLOCK)
+	WHERE salesentity LIKE '%phone%'
