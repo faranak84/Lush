@@ -1,0 +1,33 @@
+CASE [Analysis Type]
+    WHEN 'YoY' THEN
+        //The first statement sets the conditions for a date to be considered the 'selected period'. It will check every date to the date we've chosen as our starting point.
+        //It must be based on whatever date we’ve chosen and go back a user chosen number of months, weeks, days etc.
+        //If the difference between these dates is >=0 and < our Period Length we consider it to be the 'selected period'.
+        IF DATEDIFF([Period Type],[Date],[DateComparisonToUse]) >=0 AND DATEDIFF([Period Type],[Date],[DateComparisonToUse])< [Period Length] THEN 0
+        ELSEIF DATEDIFF([Period Type],[Date],DATEADD('year',-1,[DateComparisonToUse])) >=0 AND DATEDIFF([Period Type],[Date],DATEADD('year',-1,[DateComparisonToUse])) < [Period Length] THEN -1
+        END
+    WHEN 'RP' THEN
+        //The first statement sets the conditions for a date to be considered the 'selected period'. It will check every date to the date we've chosen as our starting point.
+        //It must be based on whatever date we’ve chosen and go back a user chosen number of months, weeks, days etc.
+        //If the difference between these dates is >=0 and < our Period Length we consider it to be the 'selected period'.
+        IF DATEDIFF([Period Type],[Date],[DateComparisonToUse]) >=0 AND DATEDIFF([Period Type],[Date],[DateComparisonToUse])< [Period Length] THEN 0
+        ELSEIF DATEDIFF([Period Type],[Date],[DateComparisonToUse]) >= [Period Length] AND DATEDIFF([Period Type],[Date],[DateComparisonToUse]) <2*[Period Length] THEN -1
+        END
+    WHEN 'YTD' THEN
+        //We check every date in our view and see it would come before our selected date in a calendar year
+        //If it does then we pass it to the case statement below if not we exit out and it is null
+        IF DATEPART('dayofyear',[Date]) <= DATEPART('dayofyear',[DateComparisonToUse]) THEN
+            // The case statement determines if the date is in the same year or the previous year. Any other years are null.
+            CASE YEAR([Date]) - YEAR([DateComparisonToUse])
+                WHEN 0 THEN 0
+                WHEN -1 THEN -1
+            END
+     When 'MTD' THEN
+      IF DATEPART('dayofyear',[Date]) <= DATEPART('dayofyear',[DateComparisonToUse]) THEN
+            // The case statement determines if the date is in the same year or the previous year. Any other years are null.
+            CASE YEAR([Date]) - YEAR([DateComparisonToUse])
+                WHEN 0 THEN 0
+                WHEN -1 THEN -1
+     
+        END
+END
