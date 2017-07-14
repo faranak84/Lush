@@ -1,8 +1,0 @@
-SELECT date_format(b.postdate,"%Y-%m"), count( DISTINCT b.order_number ) AS orders, sum(b.subtotal) as sales, SUM( b.subtotal + b.shipping ) AS SalesWShip, SUM( b.subtotal + b.shipping ) / count( DISTINCT b.order_number ) AS AOV
-FROM lushdb.boxes b
-WHERE b.currency like 'en_CA'
-AND b.postdate
-BETWEEN "2016-05-01"
-AND "2016-12-31"
-and b.order_number like '1000%'
-group by date_format(b.postdate,"%Y-%m")
