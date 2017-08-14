@@ -9,8 +9,6 @@ sum(subtotal) as Revenue
 
 FROM `transactions` 
 WHERE postdate between "2017-08-07" and "2017-08-13" 
-and email in 
-(select email from transactions where postdate<"2017-08-07") 
 and store_id like 'dss'
 group by currency 
 
