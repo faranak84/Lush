@@ -8,7 +8,7 @@ sum(subtotal)/count(distinct order_number) as AOV,
 sum(subtotal) as Revenue
 
 FROM `transactions` 
-WHERE postdate between "2017-08-07" and "2017-08-13" 
+WHERE postdate between "2017-08-14" and "2017-08-20" 
 and store_id like 'dss'
 group by currency 
 
