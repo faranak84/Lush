@@ -1,0 +1,23 @@
+SELECT t.email, b.currency, COUNT( DISTINCT b.order_number ) AS orders, SUM( b.subtotal ) AS sales, SUM( b.subtotal + b.shipping ) AS SalesWShip, SUM( b.subtotal + b.shipping ) / COUNT( DISTINCT b.order_number ) AS AOV
+FROM lushdb.boxes b
+inner join transactions t
+on b.order_number = t.order_number
+WHERE b.postdate
+BETWEEN  "2017-03-27"
+AND  "2017-05-09"
+AND b.order_number NOT 
+IN (
+SELECT o.order_number
+FROM orderline o
+WHERE o.sku LIKE  'IVEX%'
+AND postdate
+BETWEEN  "2017-03-27"
+AND  "2017-05-09"
+)
+AND b.order_number NOT 
+IN (
+SELECT order_number
+FROM transactions
+WHERE address1 LIKE  '%TEST ORDER%'
+)
+GROUP BY b.currency, t.email
