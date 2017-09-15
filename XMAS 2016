@@ -34,4 +34,4 @@ FROM orderline o, products p
 WHERE o.sku = p.sku
 AND postdate BETWEEN "2016-11-10" AND "2016-12-25" 
 GROUP BY o.currency, o.postdate, o.sku) as a 
-Group by a.currency, a.postdate, a.order_number, order_type
+Group by a.currency, a.postdate, a.order_number
