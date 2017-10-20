@@ -1,0 +1,5 @@
+Select currency, count(distinct email) 
+from transactions 
+where postdate between "2017-09-01" and "2017-09-30"
+and email not in 
+(select email from transactions where postdate <= "2017-09-01")
