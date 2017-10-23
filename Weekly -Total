@@ -7,9 +7,9 @@ count(distinct order_number) as orders,
 sum(subtotal)/count(distinct order_number) as AOV, 
 sum(subtotal) as Revenue
 FROM `transactions` 
-WHERE postdate between "2016-09-26" and "2016-10-02" 
+WHERE postdate between "2016-10-17" and "2016-10-23" 
 and email in 
-(select email from transactions where postdate<"2016-09-26") 
+(select email from transactions where postdate<"2016-10-23") 
 group by currency 
 
 //Total New//
