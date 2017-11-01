@@ -25,19 +25,14 @@ b.order_number,
 b.subtotal,
 b.shipping
 from  boxes as b 
-where (b.postdate between 
-( "2017-10-10" and "2017-12-26" ) or
- ("2016-10-07" and "2016-12-25")
-)
+where b.postdate >= "2016-09-01"
 AND b.order_number NOT 
 IN (
 SELECT o.order_number
 FROM orderline o
 WHERE o.sku LIKE 'IVEX%'
-AND (o.postdate
-between
-("2017-10-10" and "2017-12-26" ) or
- ("2016-10-07" and "2016-12-25"))
+AND o.postdate >= "2016-09-01")
 And b.order_number not in (
 Select order_number from transactions 
 Where address1 like '%TEST ORDER%')
+
