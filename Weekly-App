@@ -6,9 +6,8 @@ avg(nitems) as item_per_basket,
 count(distinct order_number) as orders,
 sum(subtotal)/count(distinct order_number) as AOV, 
 sum(subtotal) as Revenue
-
 FROM `transactions` 
-WHERE postdate between "2017-08-21" and "2017-08-27" 
+WHERE postdate between "2017-10-01" and "2017-10-31" 
 and store_id like 'dss'
 group by currency 
 
