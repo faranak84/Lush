@@ -1,0 +1,10 @@
+//**LY same week comparison:
+if [postdate] >= DATEADD('week', -52, [A Start Date 1])
+and [postdate] <= DATEADD('week', -52, DATEADD('day', 6, [A Start Date 1])) 
+then [quantity] END
+
+//**This Week
+IF [postdate] >= [A Start Date] AND [postdate] <= 
+DATEADD('day', 6, [A Start Date])
+THEN [Price CA$]*[quantity] END
+
