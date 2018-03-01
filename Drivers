@@ -1,19 +1,28 @@
-SELECT b.currency, count( DISTINCT b.order_number ) AS orders, sum(b.subtotal) as sales, SUM( b.subtotal + b.shipping ) AS SalesWShip, SUM( b.subtotal + b.shipping ) / count( DISTINCT b.order_number ) AS AOV
-FROM lushdb.boxes b
-WHERE b.postdate
-BETWEEN "2017-12-01"
-AND "2017-12-31"
-AND b.order_number NOT 
-IN (
-SELECT o.order_number
-FROM orderline o
-WHERE o.sku LIKE 'IVEX%'
-AND postdate
-BETWEEN"2017-12-01"
-AND "2017-12-31")
-And b.order_number not in (
-Select order_number from transactions 
-Where address1 like '%TEST ORDER%')
+SELECT 
+  b.currency, 
+  count( DISTINCT b.order_number ) AS orders, 
+  sum(b.subtotal) as sales, SUM( b.subtotal + b.shipping ) AS SalesWShip, 
+  SUM( b.subtotal + b.shipping ) / count( DISTINCT b.order_number ) AS AOV
+FROM 
+  lushdb.boxes b
+WHERE 
+  b.postdate
+        BETWEEN "2017-02-01" AND "2017-02-28"
+        AND b.order_number NOT 
+        IN (
+              SELECT 
+                o.order_number
+              FROM 
+                orderline o
+              WHERE 
+                o.sku LIKE 'IVEX%'
+              AND postdate
+              BETWEEN"2017-02-01" AND "2017-02-28")
+              And b.order_number not in (
+                                          Select 
+                                            order_number from transactions 
+                                            Where address1 like '%TEST ORDER%'
+                                            )
 group by b.currency
 
 
