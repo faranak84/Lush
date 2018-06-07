@@ -1,0 +1,20 @@
+SELECT 
+  b.postdate,
+  b.order_number,
+  b.currency,
+  t.s_state, 
+  b.subtotal, 
+  b.shipping
+FROM lushdb.boxes b, transactions t
+WHERE b.order_number = t.order_number
+AND postdate > '2015-12-31'
+AND b.order_number NOT 
+IN (
+SELECT o.order_number
+FROM orderline o
+WHERE o.sku LIKE 'IVEX%'
+AND postdate > '2015-12-31')
+And b.order_number not in (
+Select order_number from transactions 
+Where address1 like '%TEST ORDER%')
+
