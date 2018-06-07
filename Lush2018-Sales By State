@@ -17,4 +17,3 @@ AND postdate > '2015-12-31')
 And b.order_number not in (
 Select order_number from transactions 
 Where address1 like '%TEST ORDER%')
-
