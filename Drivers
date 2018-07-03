@@ -7,7 +7,7 @@ FROM
   lushdb.boxes b
 WHERE 
   b.postdate
-        BETWEEN "2017-02-01" AND "2017-02-28"
+        BETWEEN "2018-06-01" AND "2018-06-30"
         AND b.order_number NOT 
         IN (
               SELECT 
@@ -17,7 +17,7 @@ WHERE
               WHERE 
                 o.sku LIKE 'IVEX%'
               AND postdate
-              BETWEEN"2017-02-01" AND "2017-02-28")
+              BETWEEN "2018-06-01" AND "2018-06-30")
               And b.order_number not in (
                                           Select 
                                             order_number from transactions 
