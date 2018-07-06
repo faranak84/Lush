@@ -25,7 +25,11 @@ WHERE
                                             )
 group by b.currency
 
-
+SELECT
+	salesentity,
+    currency,
+	sum(subtotal),
+    count( DISTINCT order_number), 
 
 Select 
 b.currency,
