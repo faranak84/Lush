@@ -1,0 +1,15 @@
+SELECT  o.currency, 
+o.postdate, 
+o.sku, 
+p.description, 
+p.cdnweight, 
+p.category, 
+p.category_new,
+o.price, 
+o.quantity ,
+o.disc_amount
+FROM orderline as o 
+inner join products as p
+on o.sku = p.sku
+where 
+postdate >= '2016-01-01'
