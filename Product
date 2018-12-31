@@ -1,0 +1,7 @@
+ SELECT  o.currency, o.postdate, o.sku, p.description, p.cdnweight, p.category, o.price, SUM( quantity ) AS units, SUM( quantity * o.price ) AS sales 
+ FROM orderline o, products p 
+ WHERE o.sku = p.sku 
+ AND postdate BETWEEN "2016-09-16" AND "2016-10-31"  
+ AND o.sku 
+ IN (3898,6800,6801,6802,6818,6819,6820,6836,6835,6837,6838,6707,6708,5399,28966,28968,28967) 
+ GROUP BY o.currency, o.postdate, o.sku, p.description  
