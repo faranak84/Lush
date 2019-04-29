@@ -1,0 +1,9 @@
+Select 
+date_format(postdate,'%Y%m'),
+currency, 
+sum(nitems) as units, 
+count(distinct order_number) as orders,
+sum(subtotal) as revenue
+from transactions
+where postdate >= "2016-01-01"
+group by date_format(postdate, '%Y%M'), currency 
