@@ -1,0 +1,12 @@
+Select 
+email, 
+case
+    when count(distinct order_number) = 1 then "one-time-purchase" 
+    when count(distinct order_number) = 0 then "never-purchased" 
+    when count(distinct order_number) > 1 then "More than once" 
+End as Customer_Segment
+From 
+Transactions
+where 
+      postdate > "2018-01-01" 
+group by email
