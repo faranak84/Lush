@@ -1,0 +1,15 @@
+Select t.sale_year, t.customer_type, count(distinct t.email) as cstm_count
+From 
+(Select 
+Year(postdate) as sale_year, email, 
+(Case 
+  when count(distinct order_number) = 1 then "once-per-year"
+  when count(distinct order_number) > 1 then "greater than one"
+  when count(distinct order_number) = 0  then "never" 
+  else "Other" 
+  End) as customer_type
+ From transactions 
+       WHERE postdate between '2017-01-01' and '2019-04-30' 
+       and email is not null 
+ Group by year(postdate), email) as t 
+ group by t.sale_year, t.customer_type
