@@ -1,15 +1,47 @@
-Select t.sale_year, t.sale_month, t.customer_type, count(distinct t.email) as cstm_count
-From 
-(Select 
-Year(postdate) as sale_year, month(postdate) as sale_month, email, 
-(Case 
-  when count(distinct order_number) = 1 then "once-per-year"
-  when count(distinct order_number) > 1 then "greater than one"
-  when count(distinct order_number) = 0  then "never" 
-  else "Other" 
-  End) as customer_type
- From transactions 
-       WHERE postdate between '2017-01-01' and '2019-04-30' 
-       and email is not null 
- Group by year(postdate), email) as t 
- group by t.sale_year, t.sale_month, t.customer_type
+Select t.currency, t.customer_type, count(distinct t.email), avg(t.purchase_gap), sum(t.orders), sum(t.units), sum(t.sales) 
+FROM
+(Select currency, 
+email, ((max(postdate)-min(postdate))/count(distinct order_number)-1) as avg_days,  
+count(distinct order_number) as orders, 
+sum(nitems) as units,
+sum(subtotal)+sum(shipping) as sales,
+(CASE 
+	WHEN count(DISTINCT order_number) = 1 THEN "1 order"
+    WHEN count(DISTINCT order_number) = 2 THEN "2 order"
+    WHEN count(DISTINCT order_number) = 3 THEN "3 order"
+    WHEN count(DISTINCT order_number) = 4 THEN "4 order"
+    WHEN count(DISTINCT order_number) = 5 THEN "5 order"
+    ELSE "More than 5 orders" End) AS customer_type
+From transactions 
+WHERE postdate between "2017-07-01" and "2018-06-31"
+Group by currency, email) as t
+GROUP BY t.currency, t.customer_type
+
+SELECT CustID, AVG(OrderDate - PriorDate)
+FROM (
+  SELECT
+    CustID,
+    OrderDate,
+    LAG(OrderDate) OVER (PARTITION BY CustID ORDER BY OrderDate) as PriorDate
+  FROM Orders)
+GROUP BY CustID
+
+Select o.currency, 
+       p.category
+       sum(o.quantity) as units, 
+       sum(o.quantity*o.price) as sales 
+from orderline o INNER join products p 
+on o.sku=p.sku
+where o.order_number in 
+(Select order_number 
+        from transactions
+        where email in 
+          (Select 
+                  email
+        From transactions 
+        WHERE postdate between "2018-05-01" and "2019-04-31"
+        Group by currency, email
+        having count(distinct order_number)=1))
+ Group by o.currency, 
+       p.category    
+ order by o.currency, sum(o.quantity), sum(o.quantity*o.price) DESC
