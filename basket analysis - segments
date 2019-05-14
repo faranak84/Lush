@@ -1,0 +1,21 @@
+Select o.currency, 
+       p.category,
+       sum(o.quantity) as Quantity,
+sum(o.quantity * o.price) as subtotal
+From orderline as o
+inner join products as p 
+on o.sku = p.sku
+where o.order_number in 
+(Select order_number 
+        from transactions
+        where email in 
+          (Select 
+                  email
+        From transactions 
+        WHERE postdate between "2018-05-01" and "2019-04-31"
+        Group by currency, email
+        having count(distinct order_number)=2))
+        and o.postdate between "2018-05-01" and "2019-04-31"
+ Group by o.currency, 
+       p.category    
+ order by o.currency, sum(o.quantity), sum(o.quantity*o.price) DESC
