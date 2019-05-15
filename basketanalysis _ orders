@@ -1,0 +1,14 @@
+Select t.currency, count(distinct t.email), count(distinct order_number) as orders, sum(t.sales) as sales, sum(t.units) as units
+from 
+(Select currency, email, min(postdate), order_number, sum(subtotal+shipping) as sales, nitems as units 
+        from transactions
+        where email in 
+          (Select 
+                  email
+        From transactions 
+        WHERE postdate between "2018-05-01" and "2019-04-31"
+        Group by currency, email
+        having count(distinct order_number)=2))
+        and o.postdate between "2018-05-01" and "2019-04-31"
+ Group by currency, email)
+ Group by t.currency
