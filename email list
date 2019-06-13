@@ -1,0 +1,4 @@
+SELECT email 
+from Transactions
+where postdate > = "2017-01-01"
+and s_state = "NY"
