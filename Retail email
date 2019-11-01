@@ -1,0 +1,37 @@
+--1- 	Email addresses that have '04305', '04306', '04307', '06818', '06819', '06820' but don’t have '03898'
+SELECT DISTINCT storecountry, EmailAddress
+FROM BI_Reporting.dbo.vwRetailTransactions o
+WHERE OrderDate >= '20171001'
+AND SKU IN ('04305', '04306', '04307', '06818', '06819', '06820')
+AND EmailAddress NOT IN  ( SELECT DISTINCT EmailAddress
+						FROM BI_Reporting.dbo.vwRetailTransactions
+						WHERE OrderDate >= '20171001'
+						AND SKU IN ('03898')
+						)
+Group by store country
+
+--2-	Email addresses that don’t have '04305', '04306', '04307', '06818', '06819', '06820' but have '03898'
+SELECT DISTINCT EmailAddress
+FROM BI_Reporting.dbo.vwRetailTransactions o
+WHERE OrderDate >= '20171001'
+AND SKU IN ('03898')
+AND EmailAddress NOT IN  ( SELECT DISTINCT EmailAddress
+							FROM BI_Reporting.dbo.vwRetailTransactions
+							WHERE OrderDate >= '20171001'
+							AND SKU IN ('04305', '04306', '04307', '06818', '06819', '06820')
+						)
+
+--3-	Email addresses that have any of '04305', '04306', '04307', '06818', '06819', '06820' and '03898'
+
+SELECT  DISTINCT EmailAddress
+FROM BI_Reporting.dbo.vwRetailTransactions o
+WHERE OrderDate >= '20171001'
+AND SKU IN ('04305', '04306', '04307', '06818', '06819', '06820')
+AND EmailAddress IN  ( SELECT DISTINCT EmailAddress
+							FROM BI_Reporting.dbo.vwRetailTransactions
+							WHERE OrderDate >= '20171001'
+							AND SKU IN ('03898')
+						)
+
+
+
